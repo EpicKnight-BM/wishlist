@@ -1,0 +1,53 @@
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import SignOutButton from "@/components/auth/SignOutButton";
+
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
+  const { data: profile } = await supabase
+    .from("users")
+    .select("name, profile_image")
+    .eq("id", user.id)
+    .single();
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Top nav */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+          <Link href="/dashboard" className="flex items-center gap-2 font-bold text-gray-900 text-lg">
+            <span>🎁</span>
+            <span>Wishlist</span>
+          </Link>
+          <div className="flex items-center gap-3">
+            {profile?.profile_image && (
+              <img
+                src={profile.profile_image}
+                alt={profile.name}
+                className="w-8 h-8 rounded-full object-cover border border-gray-200"
+              />
+            )}
+            <span className="text-sm text-gray-600 hidden sm:block">{profile?.name}</span>
+            <SignOutButton />
+          </div>
+        </div>
+      </header>
+
+      {/* Page content */}
+      <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
+        {children}
+      </main>
+    </div>
+  );
+}
