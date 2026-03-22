@@ -7,10 +7,11 @@ import AddItemForm from "@/components/items/AddItemForm";
 import AddSecretItemForm from "@/components/items/AddSecretItemForm";
 
 interface Props {
-  params: { groupId: string; wishlistId: string };
+  params: Promise<{ groupId: string; wishlistId: string }>;
 }
 
 export default async function WishlistPage({ params }: Props) {
+  const { groupId, wishlistId } = await params;
   const supabase = await createClient();
   const {
     data: { user },
@@ -21,8 +22,8 @@ export default async function WishlistPage({ params }: Props) {
   const { data: wishlist } = await supabase
     .from("wishlists")
     .select("*, users(id, name, profile_image)")
-    .eq("id", params.wishlistId)
-    .eq("group_id", params.groupId)
+    .eq("id", wishlistId)
+    .eq("group_id", groupId)
     .single();
 
   if (!wishlist) notFound();
@@ -34,7 +35,7 @@ export default async function WishlistPage({ params }: Props) {
   const { data: items } = await supabase
     .from("items")
     .select("*")
-    .eq("wishlist_id", params.wishlistId)
+    .eq("wishlist_id", wishlistId)
     .order("created_at", { ascending: true });
 
   // Fetch claims — RLS automatically hides claims from the wishlist owner
@@ -58,7 +59,7 @@ export default async function WishlistPage({ params }: Props) {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <Link href={`/groups/${params.groupId}`} className="text-sm text-gray-400 hover:text-gray-600">
+        <Link href={`/groups/${groupId}`} className="text-sm text-gray-400 hover:text-gray-600">
           ← {isOwner ? "Back to group" : `${owner.name}'s group`}
         </Link>
         <div className="flex items-center gap-3 mt-2">
@@ -115,7 +116,7 @@ export default async function WishlistPage({ params }: Props) {
         {isOwner && (
           <div className="mt-4">
             <AddItemForm
-              wishlistId={params.wishlistId}
+              wishlistId={wishlistId}
               userId={user.id}
               isSecret={false}
             />
@@ -152,7 +153,7 @@ export default async function WishlistPage({ params }: Props) {
 
           <div className="mt-4">
             <AddSecretItemForm
-              wishlistId={params.wishlistId}
+              wishlistId={wishlistId}
               userId={user.id}
             />
           </div>

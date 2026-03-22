@@ -271,3 +271,12 @@ create index on public.items (added_by_user_id);
 create index on public.claims (item_id);
 create index on public.claims (claimed_by_user_id);
 create unique index on public.groups (invite_code);
+
+-- ============================================================
+-- GRANTS
+-- Required when tables are created via SQL (not the Supabase dashboard)
+-- ============================================================
+grant usage on schema public to anon, authenticated;
+grant all on all tables in schema public to anon, authenticated;
+grant all on all sequences in schema public to anon, authenticated;
+grant all on all functions in schema public to anon, authenticated;

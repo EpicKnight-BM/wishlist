@@ -5,10 +5,11 @@ import type { Wishlist, User } from "@/lib/types";
 import CreateWishlistForm from "@/components/wishlists/CreateWishlistForm";
 
 interface Props {
-  params: { groupId: string };
+  params: Promise<{ groupId: string }>;
 }
 
 export default async function GroupPage({ params }: Props) {
+  const { groupId } = await params;
   const supabase = await createClient();
   const {
     data: { user },
@@ -19,7 +20,7 @@ export default async function GroupPage({ params }: Props) {
   const { data: membership } = await supabase
     .from("group_members")
     .select("role, groups(id, name, description, invite_code)")
-    .eq("group_id", params.groupId)
+    .eq("group_id", groupId)
     .eq("user_id", user.id)
     .single();
 
@@ -36,13 +37,13 @@ export default async function GroupPage({ params }: Props) {
   const { data: members } = await supabase
     .from("group_members")
     .select("role, users(id, name, profile_image)")
-    .eq("group_id", params.groupId);
+    .eq("group_id", groupId);
 
   // Fetch wishlists (grouped by member)
   const { data: wishlists } = await supabase
     .from("wishlists")
     .select("*, users(id, name, profile_image)")
-    .eq("group_id", params.groupId)
+    .eq("group_id", groupId)
     .order("created_at", { ascending: false });
 
   const myWishlists = (wishlists ?? []).filter((w) => w.user_id === user.id);
@@ -99,7 +100,7 @@ export default async function GroupPage({ params }: Props) {
           {myWishlists.map((w) => (
             <Link
               key={w.id}
-              href={`/groups/${params.groupId}/wishlists/${w.id}`}
+              href={`/groups/${groupId}/wishlists/${w.id}`}
               className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-red-300 hover:shadow-sm transition-all"
             >
               <p className="font-semibold text-gray-900">{w.title}</p>
@@ -110,7 +111,7 @@ export default async function GroupPage({ params }: Props) {
               )}
             </Link>
           ))}
-          <CreateWishlistForm groupId={params.groupId} userId={user.id} />
+          <CreateWishlistForm groupId={groupId} userId={user.id} />
         </div>
       </section>
 
@@ -126,7 +127,7 @@ export default async function GroupPage({ params }: Props) {
               return (
                 <Link
                   key={w.id}
-                  href={`/groups/${params.groupId}/wishlists/${w.id}`}
+                  href={`/groups/${groupId}/wishlists/${w.id}`}
                   className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-red-300 hover:shadow-sm transition-all"
                 >
                   <div className="flex items-center gap-2 mb-1">

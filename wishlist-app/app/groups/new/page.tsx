@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createGroup } from "./actions";
 
 export default function NewGroupPage() {
   const router = useRouter();
-  const supabase = createClient();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,24 +17,13 @@ export default function NewGroupPage() {
     setLoading(true);
     setError(null);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) { router.push("/login"); return; }
-
-    const { data, error: dbError } = await supabase
-      .from("groups")
-      .insert({ name: name.trim(), description: description.trim() || null, created_by: user.id })
-      .select()
-      .single();
-
-    if (dbError) {
-      setError(dbError.message);
+    try {
+      const group = await createGroup(name.trim(), description.trim() || null);
+      router.push(`/groups/${group.id}`);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
       setLoading(false);
-      return;
     }
-
-    router.push(`/groups/${data.id}`);
   }
 
   return (
