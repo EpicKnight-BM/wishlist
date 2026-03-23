@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { joinGroup } from "./actions";
 
 export default function JoinGroupPage() {
   const router = useRouter();
-  const supabase = createClient();
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,49 +16,13 @@ export default function JoinGroupPage() {
     setLoading(true);
     setError(null);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) { router.push("/login"); return; }
-
-    // Find group by invite code
-    const { data: group, error: groupError } = await supabase
-      .from("groups")
-      .select("id")
-      .eq("invite_code", code.trim().toLowerCase())
-      .single();
-
-    if (groupError || !group) {
-      setError("Invalid invite code. Please check and try again.");
+    try {
+      const { groupId } = await joinGroup(code);
+      router.push(`/groups/${groupId}`);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
       setLoading(false);
-      return;
     }
-
-    // Check if already a member
-    const { data: existing } = await supabase
-      .from("group_members")
-      .select("id")
-      .eq("group_id", group.id)
-      .eq("user_id", user.id)
-      .single();
-
-    if (existing) {
-      router.push(`/groups/${group.id}`);
-      return;
-    }
-
-    // Join
-    const { error: joinError } = await supabase
-      .from("group_members")
-      .insert({ user_id: user.id, group_id: group.id, role: "member" });
-
-    if (joinError) {
-      setError(joinError.message);
-      setLoading(false);
-      return;
-    }
-
-    router.push(`/groups/${group.id}`);
   }
 
   return (
