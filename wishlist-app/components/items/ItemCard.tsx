@@ -18,6 +18,7 @@ export default function ItemCard({ item, claims, currentUserId, isOwner, wishlis
   const supabase = createClient();
   const [loading, setLoading] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [claimQty, setClaimQty] = useState(1);
 
   const totalClaimed = claims.reduce((sum, c) => sum + c.quantity_claimed, 0);
   const myClaim = claims.find((c) => c.claimed_by_user_id === currentUserId);
@@ -33,8 +34,9 @@ export default function ItemCard({ item, claims, currentUserId, isOwner, wishlis
       await supabase.from("claims").insert({
         item_id: item.id,
         claimed_by_user_id: currentUserId,
-        quantity_claimed: 1,
+        quantity_claimed: claimQty,
       });
+      setClaimQty(1);
     }
     setLoading(false);
     router.refresh();
@@ -175,6 +177,25 @@ export default function ItemCard({ item, claims, currentUserId, isOwner, wishlis
           {/* Claim / Unclaim button */}
           {available > 0 || myClaim ? (
             <div className="flex gap-2">
+              {!myClaim && available > 1 && (
+                <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => setClaimQty((q) => Math.max(1, q - 1))}
+                    disabled={loading || claimQty <= 1}
+                    className="px-2 py-2 text-gray-600 hover:bg-gray-100 disabled:opacity-40 transition-colors text-sm font-bold"
+                  >
+                    −
+                  </button>
+                  <span className="px-2 text-sm font-medium text-gray-700 min-w-[1.5rem] text-center">{claimQty}</span>
+                  <button
+                    onClick={() => setClaimQty((q) => Math.min(available, q + 1))}
+                    disabled={loading || claimQty >= available}
+                    className="px-2 py-2 text-gray-600 hover:bg-gray-100 disabled:opacity-40 transition-colors text-sm font-bold"
+                  >
+                    +
+                  </button>
+                </div>
+              )}
               <button
                 onClick={handleClaim}
                 disabled={loading}

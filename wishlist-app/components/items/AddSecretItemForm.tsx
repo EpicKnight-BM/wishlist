@@ -12,7 +12,7 @@ export default function AddSecretItemForm({ wishlistId, userId }: Props) {
   return (
     <div>
       <p className="text-xs text-gray-400 mb-2">
-        Secret items are hidden from the wishlist owner — only gift givers can see them.
+        Secret items are hidden from the wishlist owner.
       </p>
       <AddItemForm wishlistId={wishlistId} userId={userId} isSecret={true} />
     </div>
