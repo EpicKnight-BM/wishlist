@@ -46,3 +46,7 @@ Thumbs.db
 
 # TypeScript
 *.tsbuildinfo
+
+# Planning docs
+wishlist.md
+REDESIGN.md
