@@ -5,11 +5,10 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 interface Props {
-  groupId: string;
   userId: string;
 }
 
-export default function CreateWishlistForm({ groupId, userId }: Props) {
+export default function CreateWishlistForm({ userId }: Props) {
   const router = useRouter();
   const supabase = createClient();
   const [open, setOpen] = useState(false);
@@ -24,23 +23,23 @@ export default function CreateWishlistForm({ groupId, userId }: Props) {
     setLoading(true);
     setError(null);
 
-    const { error: dbError } = await supabase.from("wishlists").insert({
-      user_id: userId,
-      group_id: groupId,
-      title: title.trim(),
-      occasion_date: occasionDate || null,
-    });
+    const { data, error: dbError } = await supabase
+      .from("wishlists")
+      .insert({
+        user_id: userId,
+        title: title.trim(),
+        occasion_date: occasionDate || null,
+      })
+      .select("id")
+      .single();
 
-    if (dbError) {
-      setError(dbError.message);
+    if (dbError || !data) {
+      setError(dbError?.message ?? "Failed to create wishlist");
       setLoading(false);
       return;
     }
 
-    setOpen(false);
-    setTitle("");
-    setOccasionDate("");
-    router.refresh();
+    router.push(`/wishlists/${data.id}`);
   }
 
   if (!open) {
@@ -49,7 +48,7 @@ export default function CreateWishlistForm({ groupId, userId }: Props) {
         onClick={() => setOpen(true)}
         className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-xl p-4 text-gray-400 hover:border-red-300 hover:text-red-400 transition-colors text-sm w-full"
       >
-        + Add Wishlist
+        + Create Wishlist
       </button>
     );
   }
@@ -89,7 +88,7 @@ export default function CreateWishlistForm({ groupId, userId }: Props) {
           disabled={loading || !title.trim()}
           className="flex-1 py-2 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 disabled:opacity-50"
         >
-          {loading ? "Saving…" : "Create"}
+          {loading ? "Creating…" : "Create"}
         </button>
       </div>
     </form>

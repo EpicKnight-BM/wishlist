@@ -30,6 +30,14 @@ export default async function DashboardLayout({
             <span>🎁</span>
             <span>Wishlist</span>
           </Link>
+          <nav className="hidden sm:flex items-center gap-1 text-sm">
+            <Link href="/items" className="px-3 py-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+              My Items
+            </Link>
+            <Link href="/wishlists" className="px-3 py-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+              My Wishlists
+            </Link>
+          </nav>
           <div className="flex items-center gap-3">
             {profile?.profile_image && (
               <img

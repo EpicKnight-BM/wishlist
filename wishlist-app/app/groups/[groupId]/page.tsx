@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
-import type { Wishlist, User } from "@/lib/types";
-import CreateWishlistForm from "@/components/wishlists/CreateWishlistForm";
+import type { User, Wishlist } from "@/lib/types";
+import ShareWithGroupButton from "./ShareWithGroupButton";
 
 interface Props {
   params: Promise<{ groupId: string }>;
@@ -39,15 +39,29 @@ export default async function GroupPage({ params }: Props) {
     .select("role, users(id, name, profile_image)")
     .eq("group_id", groupId);
 
-  // Fetch wishlists (grouped by member)
-  const { data: wishlists } = await supabase
-    .from("wishlists")
-    .select("*, users(id, name, profile_image)")
-    .eq("group_id", groupId)
-    .order("created_at", { ascending: false });
+  // Fetch wishlists linked to this group via wishlist_groups
+  const { data: wgEntries } = await supabase
+    .from("wishlist_groups")
+    .select("wishlist_id, wishlists(*, users(id, name, profile_image))")
+    .eq("group_id", groupId);
 
-  const myWishlists = (wishlists ?? []).filter((w) => w.user_id === user.id);
-  const otherWishlists = (wishlists ?? []).filter((w) => w.user_id !== user.id);
+  const wishlists = (wgEntries ?? [])
+    .map((e) => e.wishlists as unknown as Wishlist & { users: User })
+    .filter(Boolean);
+
+  const myWishlists = wishlists.filter((w) => w.user_id === user.id);
+  const otherWishlists = wishlists.filter((w) => w.user_id !== user.id);
+
+  // User's wishlists not yet shared with this group (for the share modal)
+  const alreadySharedIds = new Set(wishlists.map((w) => w.id));
+  const { data: myAllWishlists } = await supabase
+    .from("wishlists")
+    .select("id, title")
+    .eq("user_id", user.id);
+
+  const eligibleWishlists = (myAllWishlists ?? [])
+    .filter((w) => !alreadySharedIds.has(w.id))
+    .map((w) => ({ id: w.id, name: w.title }));
 
   return (
     <div className="space-y-8">
@@ -91,16 +105,21 @@ export default async function GroupPage({ params }: Props) {
         </div>
       </section>
 
-      {/* My Wishlists */}
+      {/* My Wishlists in this group */}
       <section>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">My Wishlists</h2>
+          <ShareWithGroupButton
+            userId={user.id}
+            groupId={groupId}
+            eligibleWishlists={eligibleWishlists}
+          />
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {myWishlists.map((w) => (
             <Link
               key={w.id}
-              href={`/groups/${groupId}/wishlists/${w.id}`}
+              href={`/wishlists/${w.id}?from=${groupId}`}
               className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-red-300 hover:shadow-sm transition-all"
             >
               <p className="font-semibold text-gray-900">{w.title}</p>
@@ -111,7 +130,11 @@ export default async function GroupPage({ params }: Props) {
               )}
             </Link>
           ))}
-          <CreateWishlistForm groupId={groupId} userId={user.id} />
+          {myWishlists.length === 0 && (
+            <p className="text-sm text-gray-400 col-span-2">
+              None of your wishlists are shared with this group yet.
+            </p>
+          )}
         </div>
       </section>
 
@@ -127,7 +150,7 @@ export default async function GroupPage({ params }: Props) {
               return (
                 <Link
                   key={w.id}
-                  href={`/groups/${groupId}/wishlists/${w.id}`}
+                  href={`/wishlists/${w.id}?from=${groupId}`}
                   className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-red-300 hover:shadow-sm transition-all"
                 >
                   <div className="flex items-center gap-2 mb-1">

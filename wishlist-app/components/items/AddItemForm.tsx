@@ -5,12 +5,15 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 interface Props {
-  wishlistId: string;
   userId: string;
   isSecret: boolean;
+  /** When omitted the item is created unattached (personal item pool) */
+  wishlistId?: string;
+  /** Optional list of wishlists to allow inline attachment */
+  wishlists?: { id: string; title: string }[];
 }
 
-export default function AddItemForm({ wishlistId, userId, isSecret }: Props) {
+export default function AddItemForm({ userId, isSecret, wishlistId, wishlists }: Props) {
   const router = useRouter();
   const supabase = createClient();
   const [open, setOpen] = useState(false);
@@ -20,6 +23,7 @@ export default function AddItemForm({ wishlistId, userId, isSecret }: Props) {
   const [url, setUrl] = useState("");
   const [quantity, setQuantity] = useState("1");
   const [getByLabel, setGetByLabel] = useState("");
+  const [selectedWishlistId, setSelectedWishlistId] = useState(wishlistId ?? "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +37,7 @@ export default function AddItemForm({ wishlistId, userId, isSecret }: Props) {
     const parsedQty = parseInt(quantity, 10) || 1;
 
     const { error: dbError } = await supabase.from("items").insert({
-      wishlist_id: wishlistId,
+      wishlist_id: selectedWishlistId || null,
       added_by_user_id: userId,
       is_secret_gift: isSecret,
       name: name.trim(),
@@ -52,6 +56,7 @@ export default function AddItemForm({ wishlistId, userId, isSecret }: Props) {
 
     setOpen(false);
     setName(""); setDescription(""); setPrice(""); setUrl(""); setQuantity("1"); setGetByLabel("");
+    if (!wishlistId) setSelectedWishlistId("");
     router.refresh();
   }
 
@@ -120,6 +125,19 @@ export default function AddItemForm({ wishlistId, userId, isSecret }: Props) {
         maxLength={80}
         className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
       />
+      {/* Wishlist selector — shown when no fixed wishlistId is provided */}
+      {!wishlistId && wishlists && wishlists.length > 0 && (
+        <select
+          value={selectedWishlistId}
+          onChange={(e) => setSelectedWishlistId(e.target.value)}
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+        >
+          <option value="">Leave unattached</option>
+          {wishlists.map((w) => (
+            <option key={w.id} value={w.id}>{w.title}</option>
+          ))}
+        </select>
+      )}
       {error && <p className="text-xs text-red-600">{error}</p>}
       <div className="flex gap-2">
         <button type="button" onClick={() => setOpen(false)} className="flex-1 py-2 rounded-lg border border-gray-300 text-sm text-gray-600 hover:bg-gray-50">Cancel</button>
