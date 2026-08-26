@@ -50,3 +50,6 @@ Thumbs.db
 # Planning docs
 wishlist.md
 REDESIGN.md
+
+# Next.js auto-generated types (rewritten on every dev/build)
+next-env.d.ts
