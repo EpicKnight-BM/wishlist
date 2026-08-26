@@ -1,15 +1,21 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
+import { safeNext } from "@/lib/safe-next";
 
 export default function LoginPage() {
   const supabase = createClient();
 
   async function signInWithGoogle() {
+    // Carry ?next= (set by the proxy for invite links) through the OAuth round trip
+    const next = safeNext(new URLSearchParams(location.search).get("next"));
+    const callback = new URL("/auth/callback", location.origin);
+    if (next) callback.searchParams.set("next", next);
+
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${location.origin}/auth/callback`,
+        redirectTo: callback.toString(),
       },
     });
   }

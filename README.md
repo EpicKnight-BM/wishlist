@@ -39,6 +39,8 @@ cp .env.local.example .env.local
 
 Fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from your Supabase project's **Settings → API**.
 
+To send group invitation emails, also set `RESEND_API_KEY` from [resend.com/api-keys](https://resend.com/api-keys). Until you verify your own domain in Resend, the default `onboarding@resend.dev` sender only delivers to the address your Resend account is registered with — set `RESEND_FROM_EMAIL` to an address on your verified domain to reach anyone else. Without a key the rest of the app works fine; only the "Invite by email" button reports that it isn't configured.
+
 ### 4. Run the dev server
 
 ```bash
