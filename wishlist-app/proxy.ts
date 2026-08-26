@@ -35,11 +35,12 @@ export async function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  if (!user && pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-  if (!user && pathname.startsWith("/groups")) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  // Send unauthenticated visitors to /login, remembering where they were
+  // headed so invite links survive the round trip through sign-in.
+  if (!user && (pathname.startsWith("/dashboard") || pathname.startsWith("/groups"))) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("next", pathname + request.nextUrl.search);
+    return NextResponse.redirect(loginUrl);
   }
   if (user && pathname === "/login") {
     return NextResponse.redirect(new URL("/dashboard", request.url));

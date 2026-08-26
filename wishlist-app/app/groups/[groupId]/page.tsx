@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import type { User, Wishlist } from "@/lib/types";
 import ShareWithGroupButton from "./ShareWithGroupButton";
+import InviteByEmailButton from "./InviteByEmailButton";
 
 interface Props {
   params: Promise<{ groupId: string }>;
@@ -84,9 +85,12 @@ export default async function GroupPage({ params }: Props) {
 
       {/* Members */}
       <section>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-          Members ({members?.length ?? 0})
-        </h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Members ({members?.length ?? 0})
+          </h2>
+          <InviteByEmailButton groupId={groupId} />
+        </div>
         <div className="flex flex-wrap gap-2">
           {(members ?? []).map((m) => {
             const u = m.users as unknown as User;
