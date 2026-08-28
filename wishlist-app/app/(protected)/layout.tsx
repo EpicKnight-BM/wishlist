@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import SignOutButton from "@/components/auth/SignOutButton";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 
 export default async function AppLayout({
   children,
@@ -47,6 +48,7 @@ export default async function AppLayout({
               />
             )}
             <span className="text-sm text-muted-foreground hidden sm:block">{profile?.name}</span>
+            <ThemeToggle />
             <SignOutButton />
           </div>
         </div>

@@ -34,18 +34,13 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
   html {
     @apply font-mono;
   }
 }
 
-@layer base {
-  body {
-    @apply bg-gray-50 text-gray-900 antialiased;
-  }
-}
 /*
   ---break---
 */
