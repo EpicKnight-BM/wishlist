@@ -3,6 +3,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Props {
   userId: string;
@@ -62,89 +73,90 @@ export default function AddItemForm({ userId, isSecret, wishlistId, wishlists }:
 
   if (!open) {
     return (
-      <button
-        onClick={() => setOpen(true)}
-        className="flex items-center gap-2 text-sm text-red-500 hover:text-red-700 font-medium transition-colors"
-      >
+      <Button variant="link" onClick={() => setOpen(true)}>
         + Add item
-      </button>
+      </Button>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-red-300 p-4 space-y-3 mt-2">
-      <p className="text-sm font-semibold text-gray-700">New item</p>
-      <input
-        autoFocus
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Item name *"
-        required
-        maxLength={200}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
-      />
-      <textarea
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Description (color, size, style…)"
-        rows={2}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400 resize-none"
-      />
-      <div className="grid grid-cols-2 gap-2">
-        <input
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          placeholder="Price ($)"
-          min="0"
-          step="0.01"
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
-        />
-        <input
-          type="number"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          placeholder="Qty"
-          min="1"
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
-        />
-      </div>
-      <input
-        type="url"
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-        placeholder="Product URL (optional)"
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
-      />
-      <input
-        type="text"
-        value={getByLabel}
-        onChange={(e) => setGetByLabel(e.target.value)}
-        placeholder="Get by (e.g. Christmas, My Birthday)"
-        maxLength={80}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
-      />
-      {/* Wishlist selector — shown when no fixed wishlistId is provided */}
-      {!wishlistId && wishlists && wishlists.length > 0 && (
-        <select
-          value={selectedWishlistId}
-          onChange={(e) => setSelectedWishlistId(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
-        >
-          <option value="">Leave unattached</option>
-          {wishlists.map((w) => (
-            <option key={w.id} value={w.id}>{w.title}</option>
-          ))}
-        </select>
-      )}
-      {error && <p className="text-xs text-red-600">{error}</p>}
-      <div className="flex gap-2">
-        <button type="button" onClick={() => setOpen(false)} className="flex-1 py-2 rounded-lg border border-gray-300 text-sm text-gray-600 hover:bg-gray-50">Cancel</button>
-        <button type="submit" disabled={loading || !name.trim()} className="flex-1 py-2 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 disabled:opacity-50">
-          {loading ? "Saving…" : "Add Item"}
-        </button>
-      </div>
-    </form>
+    <Card className="mt-2 ring-primary/30">
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <p className="text-sm font-semibold text-foreground">New item</p>
+          <Input
+            autoFocus
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Item name *"
+            required
+            maxLength={200}
+          />
+          <Textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Description (color, size, style…)"
+            rows={2}
+          />
+          <div className="grid grid-cols-2 gap-2">
+            <Input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="Price ($)"
+              min="0"
+              step="0.01"
+            />
+            <Input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              placeholder="Qty"
+              min="1"
+            />
+          </div>
+          <Input
+            type="url"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="Product URL (optional)"
+          />
+          <Input
+            type="text"
+            value={getByLabel}
+            onChange={(e) => setGetByLabel(e.target.value)}
+            placeholder="Get by (e.g. Christmas, My Birthday)"
+            maxLength={80}
+          />
+          {/* Wishlist selector — shown when no fixed wishlistId is provided */}
+          {!wishlistId && wishlists && wishlists.length > 0 && (
+            <Select
+              items={Object.fromEntries(wishlists.map((w) => [w.id, w.title]))}
+              value={selectedWishlistId}
+              onValueChange={(v) => setSelectedWishlistId(v ?? "")}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Leave unattached" />
+              </SelectTrigger>
+              <SelectContent>
+                {wishlists.map((w) => (
+                  <SelectItem key={w.id} value={w.id}>{w.title}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          {error && <p className="text-xs text-destructive">{error}</p>}
+          <div className="flex gap-2">
+            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button type="submit" disabled={loading || !name.trim()} className="flex-1">
+              {loading ? "Saving…" : "Add Item"}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

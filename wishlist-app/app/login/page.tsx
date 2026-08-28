@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { safeNext } from "@/lib/safe-next";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const supabase = createClient();
@@ -21,19 +22,19 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-red-50 to-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center space-y-8">
         {/* Logo / Title */}
         <div>
           <div className="text-6xl mb-4">🎁</div>
-          <h1 className="text-4xl font-bold text-gray-900">Wishlist</h1>
-          <p className="mt-3 text-lg text-gray-600">
+          <h1 className="text-4xl font-bold text-foreground">Wishlist</h1>
+          <p className="mt-3 text-lg text-muted-foreground">
             Share what you want. Surprise guaranteed.
           </p>
         </div>
 
         {/* Feature bullets */}
-        <ul className="text-left space-y-3 text-gray-700 bg-white rounded-2xl shadow-xs border border-gray-100 p-6">
+        <ul className="text-left space-y-3 text-foreground bg-card rounded-2xl shadow-xs border border-border p-6">
           <li className="flex items-start gap-3">
             <span className="text-green-500 mt-0.5">✓</span>
             <span>Wishlist owners <strong>never</strong> see claim status — surprise preserved</span>
@@ -49,15 +50,17 @@ export default function LoginPage() {
         </ul>
 
         {/* Sign-in button */}
-        <button
+        <Button
           onClick={signInWithGoogle}
-          className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-200 rounded-xl px-6 py-4 text-gray-700 font-semibold text-lg shadow-xs hover:border-red-400 hover:shadow-md transition-all"
+          variant="outline"
+          size="lg"
+          className="w-full"
         >
           <GoogleIcon />
           Sign in with Google
-        </button>
+        </Button>
 
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-muted-foreground">
           No password needed. We only store your name and email from Google.
         </p>
       </div>

@@ -64,7 +64,7 @@ export default async function WishlistDetailPage({ params, searchParams }: Props
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <Link href={backHref} className="text-sm text-gray-400 hover:text-gray-600">
+        <Link href={backHref} className="text-sm text-muted-foreground hover:text-foreground">
           {backLabel}
         </Link>
         <div className="flex items-center gap-3 mt-2">
@@ -72,8 +72,8 @@ export default async function WishlistDetailPage({ params, searchParams }: Props
             <img src={owner.profile_image} alt={owner.name} className="w-8 h-8 rounded-full" />
           )}
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{wishlist.title}</h1>
-            <p className="text-sm text-gray-500">
+            <h1 className="text-2xl font-heading font-bold text-foreground uppercase tracking-wider">{wishlist.title}</h1>
+            <p className="text-sm text-muted-foreground">
               {isOwner ? "Your wishlist" : `${owner.name}'s wishlist`}
               {wishlist.occasion_date &&
                 ` · ${new Date(wishlist.occasion_date).toLocaleDateString()}`}
@@ -81,13 +81,13 @@ export default async function WishlistDetailPage({ params, searchParams }: Props
           </div>
         </div>
         {wishlist.description && (
-          <p className="text-gray-600 mt-2">{wishlist.description}</p>
+          <p className="text-foreground/80 mt-2">{wishlist.description}</p>
         )}
       </div>
 
       {/* Owner privacy notice */}
       {isOwner && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
+        <div className="bg-amber-50 border border-amber-200 rounded-none p-4 text-sm text-amber-800">
           🔒 <strong>Your view is private.</strong> You cannot see who (if anyone) has claimed your items — your surprise is preserved!
         </div>
       )}
@@ -95,13 +95,13 @@ export default async function WishlistDetailPage({ params, searchParams }: Props
       {/* Items */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Items ({regularItems.length})
           </h2>
         </div>
 
         {regularItems.length === 0 ? (
-          <p className="text-gray-400 text-sm">No items yet.</p>
+          <p className="text-muted-foreground text-sm">No items yet.</p>
         ) : (
           <div className="grid gap-3">
             {regularItems.map((item) => (
@@ -127,15 +127,15 @@ export default async function WishlistDetailPage({ params, searchParams }: Props
       {/* Secret gift items — only visible to non-owners */}
       {!isOwner && (
         <section>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">
             🤫 Secret Gift Items ({secretItems.length})
-            <span className="ml-2 text-xs font-normal normal-case text-gray-400">
+            <span className="ml-2 text-xs font-normal normal-case text-muted-foreground">
               — hidden from {owner.name}
             </span>
           </h2>
 
           {secretItems.length === 0 ? (
-            <p className="text-gray-400 text-sm">No secret items yet.</p>
+            <p className="text-muted-foreground text-sm">No secret items yet.</p>
           ) : (
             <div className="grid gap-3">
               {secretItems.map((item) => (

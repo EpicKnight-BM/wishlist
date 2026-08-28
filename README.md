@@ -15,6 +15,7 @@ Group gift-list app where wishlist owners never see who claimed what — so surp
 - [Next.js](https://nextjs.org/) 16 (App Router, Turbopack) + React 19 + TypeScript
 - [Supabase](https://supabase.com/) — Postgres, Auth (Google OAuth), Row Level Security
 - [Tailwind CSS](https://tailwindcss.com/) v4 — configured in CSS via `app/globals.css`, no `tailwind.config.js`
+- [shadcn/ui](https://ui.shadcn.com/) (Base UI primitives, `base-sera` style) — components live in `components/ui/`, configured via `components.json`
 
 ## Getting started
 
@@ -53,10 +54,16 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ```
 wishlist-app/
-  app/              # routes (App Router)
-    dashboard/       groups/         items/         wishlists/
-    globals.css      Tailwind import + @theme design tokens
-  components/       # UI components, grouped by feature
+  app/
+    (protected)/     # routes that require a signed-in user, sharing one layout (header/nav)
+      dashboard/       groups/         items/         wishlists/
+    login/           auth/            # unauthenticated routes
+    globals.css      Tailwind import + shadcn @theme tokens (light + dark)
+    layout.tsx       fonts + pre-hydration dark mode script
+  components/
+    ui/               shadcn components (Button, Input, Select, Dialog, Card, ...)
+    theme/            ThemeToggle (light/dark switch)
+    ...               app components, grouped by feature
   lib/
     supabase/         browser/server Supabase clients
     types.ts           Database types

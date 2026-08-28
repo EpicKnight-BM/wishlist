@@ -4,6 +4,8 @@ import Link from "next/link";
 import type { User, Wishlist } from "@/lib/types";
 import ShareWithGroupButton from "./ShareWithGroupButton";
 import InviteByEmailButton from "./InviteByEmailButton";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface Props {
   params: Promise<{ groupId: string }>;
@@ -69,24 +71,24 @@ export default async function GroupPage({ params }: Props) {
       {/* Group header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <Link href="/dashboard" className="text-sm text-gray-400 hover:text-gray-600">
+          <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground">
             ← Dashboard
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900 mt-1">{group.name}</h1>
+          <h1 className="text-2xl font-heading font-bold text-foreground uppercase tracking-wider mt-1">{group.name}</h1>
           {group.description && (
-            <p className="text-gray-500 text-sm mt-0.5">{group.description}</p>
+            <p className="text-muted-foreground text-sm mt-0.5">{group.description}</p>
           )}
         </div>
-        <div className="text-right text-xs text-gray-400">
+        <div className="text-right text-xs text-muted-foreground">
           <p>Invite code</p>
-          <p className="font-mono font-bold text-gray-700 text-base">{group.invite_code}</p>
+          <p className="font-mono font-bold text-foreground text-base">{group.invite_code}</p>
         </div>
       </div>
 
       {/* Members */}
       <section>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Members ({members?.length ?? 0})
           </h2>
           <InviteByEmailButton groupId={groupId} />
@@ -95,13 +97,13 @@ export default async function GroupPage({ params }: Props) {
           {(members ?? []).map((m) => {
             const u = m.users as unknown as User;
             return (
-              <div key={u.id} className="flex items-center gap-2 bg-white border border-gray-200 rounded-full px-3 py-1.5">
+              <div key={u.id} className="flex items-center gap-2 bg-card border border-border rounded-full px-3 py-1.5">
                 {u.profile_image && (
                   <img src={u.profile_image} alt={u.name} className="w-5 h-5 rounded-full" />
                 )}
-                <span className="text-sm text-gray-700">{u.name}</span>
+                <span className="text-sm text-foreground">{u.name}</span>
                 {m.role === "admin" && (
-                  <span className="text-xs text-red-500 font-medium">admin</span>
+                  <Badge variant="secondary">admin</Badge>
                 )}
               </div>
             );
@@ -112,7 +114,7 @@ export default async function GroupPage({ params }: Props) {
       {/* My Wishlists in this group */}
       <section>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">My Wishlists</h2>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">My Wishlists</h2>
           <ShareWithGroupButton
             userId={user.id}
             groupId={groupId}
@@ -121,21 +123,21 @@ export default async function GroupPage({ params }: Props) {
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {myWishlists.map((w) => (
-            <Link
-              key={w.id}
-              href={`/wishlists/${w.id}?from=${groupId}`}
-              className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-red-300 hover:shadow-xs transition-all"
-            >
-              <p className="font-semibold text-gray-900">{w.title}</p>
-              {w.occasion_date && (
-                <p className="text-xs text-gray-400 mt-1">
-                  {new Date(w.occasion_date).toLocaleDateString()}
-                </p>
-              )}
+            <Link key={w.id} href={`/wishlists/${w.id}?from=${groupId}`} className="h-full">
+              <Card size="sm" className="h-full hover:ring-ring/50 transition-all">
+                <CardContent>
+                  <p className="font-semibold text-foreground">{w.title}</p>
+                  {w.occasion_date && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {new Date(w.occasion_date).toLocaleDateString()}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
             </Link>
           ))}
           {myWishlists.length === 0 && (
-            <p className="text-sm text-gray-400 col-span-2">
+            <p className="text-sm text-muted-foreground col-span-2">
               None of your wishlists are shared with this group yet.
             </p>
           )}
@@ -145,30 +147,30 @@ export default async function GroupPage({ params }: Props) {
       {/* Others' Wishlists */}
       {otherWishlists.length > 0 && (
         <section>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
             Others&apos; Wishlists
           </h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {otherWishlists.map((w) => {
               const owner = w.users as unknown as User;
               return (
-                <Link
-                  key={w.id}
-                  href={`/wishlists/${w.id}?from=${groupId}`}
-                  className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-red-300 hover:shadow-xs transition-all"
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    {owner.profile_image && (
-                      <img src={owner.profile_image} alt={owner.name} className="w-5 h-5 rounded-full" />
-                    )}
-                    <span className="text-xs text-gray-500">{owner.name}</span>
-                  </div>
-                  <p className="font-semibold text-gray-900">{w.title}</p>
-                  {w.occasion_date && (
-                    <p className="text-xs text-gray-400 mt-1">
-                      {new Date(w.occasion_date).toLocaleDateString()}
-                    </p>
-                  )}
+                <Link key={w.id} href={`/wishlists/${w.id}?from=${groupId}`} className="h-full">
+                  <Card size="sm" className="h-full hover:ring-ring/50 transition-all">
+                    <CardContent>
+                      <div className="flex items-center gap-2 mb-1">
+                        {owner.profile_image && (
+                          <img src={owner.profile_image} alt={owner.name} className="w-5 h-5 rounded-full" />
+                        )}
+                        <span className="text-xs text-muted-foreground">{owner.name}</span>
+                      </div>
+                      <p className="font-semibold text-foreground">{w.title}</p>
+                      {w.occasion_date && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {new Date(w.occasion_date).toLocaleDateString()}
+                        </p>
+                      )}
+                    </CardContent>
+                  </Card>
                 </Link>
               );
             })}

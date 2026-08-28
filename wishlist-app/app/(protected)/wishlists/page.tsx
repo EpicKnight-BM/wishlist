@@ -5,6 +5,7 @@ import type { Group } from "@/lib/types";
 import CreateWishlistForm from "@/components/wishlists/CreateWishlistForm";
 import WishlistGroupBadges from "@/components/wishlists/WishlistGroupBadges";
 import ShareWishlistButton from "./ShareWishlistButton";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default async function WishlistsPage() {
   const supabase = await createClient();
@@ -31,17 +32,17 @@ export default async function WishlistsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <Link href="/dashboard" className="text-sm text-gray-400 hover:text-gray-600">
+        <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground">
           ← Dashboard
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900 mt-1">My Wishlists</h1>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h1 className="text-2xl font-heading font-bold text-foreground uppercase tracking-wider mt-1">My Wishlists</h1>
+        <p className="text-sm text-muted-foreground mt-0.5">
           Create wishlists and share them with your groups.
         </p>
       </div>
 
       {(wishlists ?? []).length === 0 ? (
-        <p className="text-gray-400 text-sm">No wishlists yet — create one below!</p>
+        <p className="text-muted-foreground text-sm">No wishlists yet — create one below!</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {(wishlists ?? []).map((w) => {
@@ -64,43 +65,42 @@ export default async function WishlistsPage() {
               .map((g) => ({ id: g.id, name: g.name }));
 
             return (
-              <div
-                key={w.id}
-                className="bg-white rounded-xl border border-gray-200 p-4 space-y-3"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
+              <Card key={w.id} size="sm">
+                <CardContent className="space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <Link
+                        href={`/wishlists/${w.id}`}
+                        className="font-semibold text-foreground hover:text-primary transition-colors"
+                      >
+                        {w.title}
+                      </Link>
+                      {w.occasion_date && (
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {new Date(w.occasion_date).toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
                     <Link
                       href={`/wishlists/${w.id}`}
-                      className="font-semibold text-gray-900 hover:text-red-500 transition-colors"
+                      className="text-xs text-primary hover:underline font-medium shrink-0"
                     >
-                      {w.title}
+                      View →
                     </Link>
-                    {w.occasion_date && (
-                      <p className="text-xs text-gray-400 mt-0.5">
-                        {new Date(w.occasion_date).toLocaleDateString()}
-                      </p>
-                    )}
                   </div>
-                  <Link
-                    href={`/wishlists/${w.id}`}
-                    className="text-xs text-red-500 hover:text-red-700 font-medium shrink-0"
-                  >
-                    View →
-                  </Link>
-                </div>
 
-                <div className="space-y-1.5">
-                  <p className="text-xs text-gray-500 font-medium">Shared with</p>
-                  <WishlistGroupBadges wishlistId={w.id} groups={sharedWith} />
-                </div>
+                  <div className="space-y-1.5">
+                    <p className="text-xs text-muted-foreground font-medium">Shared with</p>
+                    <WishlistGroupBadges wishlistId={w.id} groups={sharedWith} />
+                  </div>
 
-                <ShareWishlistButton
-                  userId={user.id}
-                  wishlistId={w.id}
-                  eligibleGroups={eligibleGroups}
-                />
-              </div>
+                  <ShareWishlistButton
+                    userId={user.id}
+                    wishlistId={w.id}
+                    eligibleGroups={eligibleGroups}
+                  />
+                </CardContent>
+              </Card>
             );
           })}
         </div>

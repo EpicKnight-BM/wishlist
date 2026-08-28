@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ShareWithGroupModal from "@/components/wishlists/ShareWithGroupModal";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   userId: string;
@@ -14,12 +15,9 @@ export default function ShareWithGroupButton({ userId, groupId, eligibleWishlist
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors"
-      >
+      <Button variant="link" size="sm" onClick={() => setOpen(true)}>
         + Share a wishlist
-      </button>
+      </Button>
       {open && (
         <ShareWithGroupModal
           userId={userId}
