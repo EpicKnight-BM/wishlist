@@ -131,7 +131,11 @@ export default function AddItemForm({ userId, isSecret, wishlistId, wishlists }:
           />
           {/* Wishlist selector — shown when no fixed wishlistId is provided */}
           {!wishlistId && wishlists && wishlists.length > 0 && (
-            <Select value={selectedWishlistId} onValueChange={(v) => setSelectedWishlistId(v ?? "")}>
+            <Select
+              items={Object.fromEntries(wishlists.map((w) => [w.id, w.title]))}
+              value={selectedWishlistId}
+              onValueChange={(v) => setSelectedWishlistId(v ?? "")}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Leave unattached" />
               </SelectTrigger>

@@ -87,7 +87,11 @@ export default function UnattachedItemCard({ item, wishlists }: Props) {
         {wishlists.length > 0 && (
           attaching ? (
             <div className="flex gap-2">
-              <Select value={selected} onValueChange={(v) => setSelected(v ?? "")}>
+              <Select
+                items={Object.fromEntries(wishlists.map((w) => [w.id, w.title]))}
+                value={selected}
+                onValueChange={(v) => setSelected(v ?? "")}
+              >
                 <SelectTrigger className="flex-1 border-b border-input">
                   <SelectValue placeholder="— choose wishlist —" />
                 </SelectTrigger>

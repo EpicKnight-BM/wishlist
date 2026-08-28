@@ -91,7 +91,11 @@ export default function ShareWithGroupModal({
                   : "You have no wishlists to share yet."}
               </p>
             ) : (
-              <Select value={selected} onValueChange={(v) => setSelected(v ?? "")}>
+              <Select
+                items={Object.fromEntries(options.map((o) => [o.id, o.name]))}
+                value={selected}
+                onValueChange={(v) => setSelected(v ?? "")}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="— choose —" />
                 </SelectTrigger>

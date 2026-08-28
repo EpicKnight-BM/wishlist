@@ -30,10 +30,10 @@ export default async function DashboardPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-heading font-bold text-foreground uppercase tracking-wider">My Groups</h1>
         <div className="flex gap-2">
-          <Button variant="outline" render={<Link href="/groups/join" />}>
+          <Button variant="outline" nativeButton={false} render={<Link href="/groups/join" />}>
             Join Group
           </Button>
-          <Button render={<Link href="/groups/new" />}>
+          <Button nativeButton={false} render={<Link href="/groups/new" />}>
             + New Group
           </Button>
         </div>
