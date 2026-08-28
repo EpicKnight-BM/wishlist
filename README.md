@@ -12,9 +12,9 @@ Group gift-list app where wishlist owners never see who claimed what — so surp
 
 ## Tech stack
 
-- [Next.js](https://nextjs.org/) (App Router, Turbopack) + TypeScript
+- [Next.js](https://nextjs.org/) 16 (App Router, Turbopack) + React 19 + TypeScript
 - [Supabase](https://supabase.com/) — Postgres, Auth (Google OAuth), Row Level Security
-- Tailwind CSS
+- [Tailwind CSS](https://tailwindcss.com/) v4 — configured in CSS via `app/globals.css`, no `tailwind.config.js`
 
 ## Getting started
 
@@ -55,6 +55,7 @@ Open [http://localhost:3000](http://localhost:3000).
 wishlist-app/
   app/              # routes (App Router)
     dashboard/       groups/         items/         wishlists/
+    globals.css      Tailwind import + @theme design tokens
   components/       # UI components, grouped by feature
   lib/
     supabase/         browser/server Supabase clients

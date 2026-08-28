@@ -77,7 +77,7 @@ export default function UnattachedItemCard({ item, wishlists }: Props) {
             <select
               value={selected}
               onChange={(e) => setSelected(e.target.value)}
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+              className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
             >
               <option value="">— choose wishlist —</option>
               {wishlists.map((w) => (

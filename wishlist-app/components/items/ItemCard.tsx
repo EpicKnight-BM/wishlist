@@ -186,7 +186,7 @@ export default function ItemCard({ item, claims, currentUserId, isOwner, wishlis
                   >
                     −
                   </button>
-                  <span className="px-2 text-sm font-medium text-gray-700 min-w-[1.5rem] text-center">{claimQty}</span>
+                  <span className="px-2 text-sm font-medium text-gray-700 min-w-6 text-center">{claimQty}</span>
                   <button
                     onClick={() => setClaimQty((q) => Math.min(available, q + 1))}
                     disabled={loading || claimQty >= available}

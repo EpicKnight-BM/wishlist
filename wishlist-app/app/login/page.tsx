@@ -21,7 +21,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-linear-to-br from-red-50 to-white flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center space-y-8">
         {/* Logo / Title */}
         <div>
@@ -33,7 +33,7 @@ export default function LoginPage() {
         </div>
 
         {/* Feature bullets */}
-        <ul className="text-left space-y-3 text-gray-700 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <ul className="text-left space-y-3 text-gray-700 bg-white rounded-2xl shadow-xs border border-gray-100 p-6">
           <li className="flex items-start gap-3">
             <span className="text-green-500 mt-0.5">✓</span>
             <span>Wishlist owners <strong>never</strong> see claim status — surprise preserved</span>
@@ -51,7 +51,7 @@ export default function LoginPage() {
         {/* Sign-in button */}
         <button
           onClick={signInWithGoogle}
-          className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-200 rounded-xl px-6 py-4 text-gray-700 font-semibold text-lg shadow-sm hover:border-red-400 hover:shadow-md transition-all"
+          className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-200 rounded-xl px-6 py-4 text-gray-700 font-semibold text-lg shadow-xs hover:border-red-400 hover:shadow-md transition-all"
         >
           <GoogleIcon />
           Sign in with Google

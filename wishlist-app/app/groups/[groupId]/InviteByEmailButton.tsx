@@ -67,7 +67,7 @@ export default function InviteByEmailButton({ groupId }: Props) {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="friend@example.com"
           required
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
         />
         <p className="text-xs text-gray-400 mt-1">
           They&apos;ll get a link that joins them to this group.

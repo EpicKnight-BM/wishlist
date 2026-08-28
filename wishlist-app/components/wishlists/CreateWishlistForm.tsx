@@ -66,13 +66,13 @@ export default function CreateWishlistForm({ userId }: Props) {
         placeholder="Wishlist title (e.g. Christmas 2026)"
         required
         maxLength={100}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
       />
       <input
         type="date"
         value={occasionDate}
         onChange={(e) => setOccasionDate(e.target.value)}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
       />
       {error && <p className="text-xs text-red-600">{error}</p>}
       <div className="flex gap-2">

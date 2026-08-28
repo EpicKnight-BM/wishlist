@@ -124,7 +124,7 @@ export default async function GroupPage({ params }: Props) {
             <Link
               key={w.id}
               href={`/wishlists/${w.id}?from=${groupId}`}
-              className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-red-300 hover:shadow-sm transition-all"
+              className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-red-300 hover:shadow-xs transition-all"
             >
               <p className="font-semibold text-gray-900">{w.title}</p>
               {w.occasion_date && (
@@ -155,7 +155,7 @@ export default async function GroupPage({ params }: Props) {
                 <Link
                   key={w.id}
                   href={`/wishlists/${w.id}?from=${groupId}`}
-                  className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-red-300 hover:shadow-sm transition-all"
+                  className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-red-300 hover:shadow-xs transition-all"
                 >
                   <div className="flex items-center gap-2 mb-1">
                     {owner.profile_image && (
