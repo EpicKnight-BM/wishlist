@@ -82,14 +82,14 @@ export default function AddItemForm({ userId, isSecret, wishlistId, wishlists }:
         placeholder="Item name *"
         required
         maxLength={200}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
       />
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Description (color, size, style…)"
         rows={2}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 resize-none"
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400 resize-none"
       />
       <div className="grid grid-cols-2 gap-2">
         <input
@@ -99,7 +99,7 @@ export default function AddItemForm({ userId, isSecret, wishlistId, wishlists }:
           placeholder="Price ($)"
           min="0"
           step="0.01"
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
         />
         <input
           type="number"
@@ -107,7 +107,7 @@ export default function AddItemForm({ userId, isSecret, wishlistId, wishlists }:
           onChange={(e) => setQuantity(e.target.value)}
           placeholder="Qty"
           min="1"
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
         />
       </div>
       <input
@@ -115,7 +115,7 @@ export default function AddItemForm({ userId, isSecret, wishlistId, wishlists }:
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="Product URL (optional)"
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
       />
       <input
         type="text"
@@ -123,14 +123,14 @@ export default function AddItemForm({ userId, isSecret, wishlistId, wishlists }:
         onChange={(e) => setGetByLabel(e.target.value)}
         placeholder="Get by (e.g. Christmas, My Birthday)"
         maxLength={80}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
       />
       {/* Wishlist selector — shown when no fixed wishlistId is provided */}
       {!wishlistId && wishlists && wishlists.length > 0 && (
         <select
           value={selectedWishlistId}
           onChange={(e) => setSelectedWishlistId(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
         >
           <option value="">Leave unattached</option>
           {wishlists.map((w) => (

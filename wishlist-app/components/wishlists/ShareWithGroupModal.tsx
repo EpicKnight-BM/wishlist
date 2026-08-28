@@ -79,7 +79,7 @@ export default function ShareWithGroupModal({
                 value={selected}
                 onChange={(e) => setSelected(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
               >
                 <option value="">— choose —</option>
                 {options.map((o) => (
