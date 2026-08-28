@@ -24,17 +24,17 @@ export default async function DashboardLayout({
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top nav */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <header className="bg-background border-b border-border sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-2 font-bold text-gray-900 text-lg">
+          <Link href="/dashboard" className="flex items-center gap-2 font-heading font-bold text-foreground text-lg uppercase tracking-wider">
             <span>🎁</span>
             <span>Wishlist</span>
           </Link>
           <nav className="hidden sm:flex items-center gap-1 text-sm">
-            <Link href="/items" className="px-3 py-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+            <Link href="/items" className="px-3 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
               My Items
             </Link>
-            <Link href="/wishlists" className="px-3 py-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+            <Link href="/wishlists" className="px-3 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
               My Wishlists
             </Link>
           </nav>
@@ -43,10 +43,10 @@ export default async function DashboardLayout({
               <img
                 src={profile.profile_image}
                 alt={profile.name}
-                className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                className="w-8 h-8 rounded-full object-cover border border-border"
               />
             )}
-            <span className="text-sm text-gray-600 hidden sm:block">{profile?.name}</span>
+            <span className="text-sm text-muted-foreground hidden sm:block">{profile?.name}</span>
             <SignOutButton />
           </div>
         </div>

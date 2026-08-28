@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface Props {
   userId: string;
@@ -46,7 +49,7 @@ export default function CreateWishlistForm({ userId }: Props) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-xl p-4 text-gray-400 hover:border-red-300 hover:text-red-400 transition-colors text-sm w-full"
+        className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-none p-4 text-muted-foreground hover:border-ring hover:text-foreground transition-colors text-sm w-full"
       >
         + Create Wishlist
       </button>
@@ -54,43 +57,34 @@ export default function CreateWishlistForm({ userId }: Props) {
   }
 
   return (
-    <form
-      onSubmit={handleCreate}
-      className="bg-white rounded-xl border border-red-300 p-4 space-y-3"
-    >
-      <input
-        autoFocus
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Wishlist title (e.g. Christmas 2026)"
-        required
-        maxLength={100}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
-      />
-      <input
-        type="date"
-        value={occasionDate}
-        onChange={(e) => setOccasionDate(e.target.value)}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
-      />
-      {error && <p className="text-xs text-red-600">{error}</p>}
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={() => setOpen(false)}
-          className="flex-1 py-2 rounded-lg border border-gray-300 text-sm text-gray-600 hover:bg-gray-50"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={loading || !title.trim()}
-          className="flex-1 py-2 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 disabled:opacity-50"
-        >
-          {loading ? "Creating…" : "Create"}
-        </button>
-      </div>
-    </form>
+    <Card className="ring-primary/30">
+      <CardContent>
+        <form onSubmit={handleCreate} className="space-y-3">
+          <Input
+            autoFocus
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Wishlist title (e.g. Christmas 2026)"
+            required
+            maxLength={100}
+          />
+          <Input
+            type="date"
+            value={occasionDate}
+            onChange={(e) => setOccasionDate(e.target.value)}
+          />
+          {error && <p className="text-xs text-destructive">{error}</p>}
+          <div className="flex gap-2">
+            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button type="submit" disabled={loading || !title.trim()} className="flex-1">
+              {loading ? "Creating…" : "Create"}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

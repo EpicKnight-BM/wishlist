@@ -3,6 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createGroup } from "./actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function NewGroupPage() {
   const router = useRouter();
@@ -28,49 +33,45 @@ export default function NewGroupPage() {
 
   return (
     <div className="max-w-md mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Create a New Group</h1>
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Group Name *</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Smith Family"
-            required
-            maxLength={80}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description (optional)</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="What's this group for?"
-            rows={3}
-            maxLength={300}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-400 resize-none"
-          />
-        </div>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <div className="flex gap-3 pt-2">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="flex-1 py-2.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={loading || !name.trim()}
-            className="flex-1 py-2.5 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 disabled:opacity-50"
-          >
-            {loading ? "Creating…" : "Create Group"}
-          </button>
-        </div>
-      </form>
+      <h1 className="text-2xl font-heading font-bold text-foreground uppercase tracking-wider mb-6">Create a New Group</h1>
+      <Card>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="group-name" className="mb-1">Group Name *</Label>
+              <Input
+                id="group-name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Smith Family"
+                required
+                maxLength={80}
+              />
+            </div>
+            <div>
+              <Label htmlFor="group-description" className="mb-1">Description (optional)</Label>
+              <Textarea
+                id="group-description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="What's this group for?"
+                rows={3}
+                maxLength={300}
+              />
+            </div>
+            {error && <p className="text-sm text-destructive">{error}</p>}
+            <div className="flex gap-3 pt-2">
+              <Button type="button" variant="outline" onClick={() => router.back()} className="flex-1">
+                Cancel
+              </Button>
+              <Button type="submit" disabled={loading || !name.trim()} className="flex-1">
+                {loading ? "Creating…" : "Create Group"}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

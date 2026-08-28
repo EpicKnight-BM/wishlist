@@ -9,7 +9,7 @@ export default async function JoinGroupPage({ searchParams }: Props) {
 
   return (
     <div className="max-w-md mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Join a Group</h1>
+      <h1 className="text-2xl font-heading font-bold text-foreground uppercase tracking-wider mb-6">Join a Group</h1>
       <JoinGroupForm initialCode={code?.trim() ?? ""} />
     </div>
   );

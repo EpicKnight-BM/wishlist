@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Badge } from "@/components/ui/badge";
+import { IconX } from "@tabler/icons-react";
 
 interface GroupBadge {
   wishlistGroupId: string;
@@ -28,26 +30,23 @@ export default function WishlistGroupBadges({ wishlistId, groups }: Props) {
   }
 
   if (groups.length === 0) {
-    return <span className="text-xs text-gray-400 italic">Not shared with any group</span>;
+    return <span className="text-xs text-muted-foreground italic">Not shared with any group</span>;
   }
 
   return (
     <div className="flex flex-wrap gap-1.5">
       {groups.map((g) => (
-        <span
-          key={g.wishlistGroupId}
-          className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded-full border border-blue-200"
-        >
+        <Badge key={g.wishlistGroupId} variant="outline" className="gap-1">
           {g.groupName}
           <button
             onClick={() => handleRemove(g.wishlistGroupId)}
             disabled={removing === g.wishlistGroupId}
-            className="hover:text-blue-900 disabled:opacity-40 leading-none"
+            className="hover:text-foreground disabled:opacity-40 leading-none"
             title={`Remove from ${g.groupName}`}
           >
-            ×
+            <IconX className="size-2.5" />
           </button>
-        </span>
+        </Badge>
       ))}
     </div>
   );
