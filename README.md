@@ -4,11 +4,28 @@ Group gift-list app where wishlist owners never see who claimed what — so surp
 
 ## How it works
 
-- **Groups** — permanent groups (family, friends, coworkers) for recurring occasions, joined via invite code
-- **Wishlists** — owned by one user, shared with any number of groups
+- **People** — the home page: everyone you share at least one group with. Open a person to see the wishlists of theirs you can view
+- **Groups** — permanent groups (family, friends, coworkers) for recurring occasions, joined via invite code. Groups are the sharing mechanism, not the browsing one: group pages are pure admin (members + invite code)
+- **Wishlists** — owned by one user, shared with any number of groups. A wishlist page shows who else it's shared with, grouped by group, so givers can coordinate
 - **Items** — added to a wishlist, or kept unattached in a personal item pool until assigned
 - **Claims** — group members claim items to signal "I've got this"; the wishlist owner never sees claim status, only a warning if they try to delete a claimed item
 - **Secret gift items** — items other members add for someone, hidden from that person entirely
+
+### Navigation
+
+The app is organized around people rather than groups:
+
+```
+/dashboard            People — everyone you share a group with
+/people/[userId]      One person's wishlists (404 unless you share a group)
+/wishlists/[id]       A wishlist: items, claims, and its "Shared with" section
+/groups               Your groups (nav link)
+/groups/[groupId]     Group admin — members + invite code
+/wishlists            Your own wishlists — create, and share into groups
+/items                Your unattached item pool
+```
+
+A viewer only ever sees the groups they themselves belong to in a wishlist's "Shared with" section, so a wishlist shared with two unrelated circles never exposes one to the other.
 
 ## Tech stack
 
@@ -56,7 +73,7 @@ Open [http://localhost:3000](http://localhost:3000).
 wishlist-app/
   app/
     (protected)/     # routes that require a signed-in user, sharing one layout (header/nav)
-      dashboard/       groups/         items/         wishlists/
+      dashboard/       groups/         items/         people/        wishlists/
     login/           auth/            # unauthenticated routes
     globals.css      Tailwind import + shadcn @theme tokens (light + dark)
     layout.tsx       fonts + pre-hydration dark mode script
@@ -76,4 +93,5 @@ wishlist-app/
 - A wishlist can belong to multiple groups via the `wishlist_groups` join table.
 - Items can be unattached (`wishlist_id IS NULL`) — a user's personal pool before assigning them to a wishlist.
 - Claims are global to a wishlist, not per-group: if a wishlist is shared with several groups, members of any of them see the same claim state.
+- There is no "contacts" or "friends" table — the People list is derived at read time from shared `group_members` rows, so group membership remains the single source of truth for who can see what.
 - Visibility and claim-hiding rules are enforced at the database level via Postgres RLS policies (see the migrations).
