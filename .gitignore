@@ -48,8 +48,7 @@ Thumbs.db
 *.tsbuildinfo
 
 # Planning docs
-wishlist.md
-REDESIGN.md
+*.md
 
 # Next.js auto-generated types (rewritten on every dev/build)
 next-env.d.ts
@@ -57,3 +56,6 @@ next-env.d.ts
 # Local HTTPS certificates from `next dev --experimental-https`
 certificates/
 *.pem
+
+# Include all README.md files, at any depth
+!README.md
