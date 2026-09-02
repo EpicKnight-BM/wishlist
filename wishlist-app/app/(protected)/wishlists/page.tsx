@@ -71,7 +71,7 @@ export default async function WishlistsPage() {
                     <div>
                       <Link
                         href={`/wishlists/${w.id}`}
-                        className="font-semibold text-foreground hover:text-primary transition-colors"
+                        className="font-semibold text-foreground hover:text-primary-text transition-colors"
                       >
                         {w.title}
                       </Link>
@@ -83,7 +83,7 @@ export default async function WishlistsPage() {
                     </div>
                     <Link
                       href={`/wishlists/${w.id}`}
-                      className="text-xs text-primary hover:underline font-medium shrink-0"
+                      className="text-xs text-primary-text hover:underline font-medium shrink-0"
                     >
                       View →
                     </Link>

@@ -15,7 +15,7 @@ export default function ShareWishlistButton({ userId, wishlistId, eligibleGroups
 
   return (
     <>
-      <Button variant="link" size="sm" onClick={() => setOpen(true)}>
+      <Button size="sm" onClick={() => setOpen(true)}>
         + Share with group
       </Button>
       {open && (

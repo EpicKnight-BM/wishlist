@@ -38,6 +38,9 @@ export default async function AppLayout({
             <Link href="/wishlists" className="px-3 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
               My Wishlists
             </Link>
+            <Link href="/groups" className="px-3 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
+              Groups
+            </Link>
           </nav>
           <div className="flex items-center gap-3">
             {profile?.profile_image && (

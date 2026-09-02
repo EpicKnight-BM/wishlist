@@ -77,7 +77,7 @@ export default function UnattachedItemCard({ item, wishlists }: Props) {
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+            className="inline-flex items-center gap-1 text-xs text-primary-text hover:underline"
           >
             🔗 View product ↗
           </a>
@@ -113,7 +113,7 @@ export default function UnattachedItemCard({ item, wishlists }: Props) {
               </Button>
             </div>
           ) : (
-            <Button variant="link" size="sm" onClick={() => setAttaching(true)}>
+            <Button size="sm" onClick={() => setAttaching(true)}>
               + Attach to wishlist
             </Button>
           )

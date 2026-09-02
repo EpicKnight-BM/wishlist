@@ -99,7 +99,7 @@ export default async function ItemsPage() {
                     {wl && (
                       <Link
                         href={`/wishlists/${wl.id}`}
-                        className="text-xs text-primary hover:underline shrink-0"
+                        className="text-xs text-primary-text hover:underline shrink-0"
                       >
                         {wl.title} →
                       </Link>
