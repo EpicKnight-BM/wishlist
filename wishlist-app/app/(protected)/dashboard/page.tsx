@@ -62,9 +62,9 @@ export default async function DashboardPage() {
           <div className="text-5xl mb-4">👋</div>
           <p className="text-lg font-medium">No one here yet</p>
           <p className="text-sm mt-1">
-            <Link href="/groups/join" className="text-primary hover:underline">Join a group</Link>
+            <Link href="/groups/join" className="text-primary-text hover:underline">Join a group</Link>
             {" or "}
-            <Link href="/groups/new" className="text-primary hover:underline">create one</Link>
+            <Link href="/groups/new" className="text-primary-text hover:underline">create one</Link>
             {" to start sharing wishlists."}
           </p>
         </div>

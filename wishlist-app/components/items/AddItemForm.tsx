@@ -73,7 +73,7 @@ export default function AddItemForm({ userId, isSecret, wishlistId, wishlists }:
 
   if (!open) {
     return (
-      <Button variant="link" onClick={() => setOpen(true)}>
+      <Button onClick={() => setOpen(true)}>
         + Add item
       </Button>
     );

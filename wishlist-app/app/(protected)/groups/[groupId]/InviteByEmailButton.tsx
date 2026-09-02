@@ -45,7 +45,7 @@ export default function InviteByEmailButton({ groupId }: Props) {
 
   if (!open) {
     return (
-      <Button variant="link" size="sm" onClick={() => setOpen(true)}>
+      <Button size="sm" onClick={() => setOpen(true)}>
         + Invite by email
       </Button>
     );

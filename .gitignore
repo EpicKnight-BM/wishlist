@@ -47,8 +47,9 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 
-# Planning docs
+# Planning docs and other non-essential files
 *.md
+*.pdf
 
 # Next.js auto-generated types (rewritten on every dev/build)
 next-env.d.ts

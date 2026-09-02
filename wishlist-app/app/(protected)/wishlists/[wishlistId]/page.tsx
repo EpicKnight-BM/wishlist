@@ -117,7 +117,7 @@ export default async function WishlistDetailPage({ params, searchParams }: Props
 
       {/* Owner privacy notice */}
       {isOwner && (
-        <div className="bg-amber-50 border border-amber-200 rounded-none p-4 text-sm text-amber-800">
+        <div className="bg-muted border border-border rounded-none p-4 text-sm text-foreground">
           🔒 <strong>Your view is private.</strong> You cannot see who (if anyone) has claimed your items — your surprise is preserved!
         </div>
       )}

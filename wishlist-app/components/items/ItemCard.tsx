@@ -116,18 +116,19 @@ export default function ItemCard({ item, claims, currentUserId, isOwner, wishlis
 
         {/* Delete warning (shown to owner when item is claimed) */}
         {deleteConfirm && (
-          <div className="bg-amber-50 border border-amber-200 rounded-none p-3 text-sm text-amber-800">
+          <div className="bg-muted border border-border rounded-none p-3 text-sm text-foreground">
             <p className="font-medium mb-2">⚠️ Someone may have already planned to get this for you — are you sure you want to remove it?</p>
             <div className="flex gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setDeleteConfirm(false)}
-                className="flex-1 border-amber-300 text-amber-700 hover:bg-amber-100"
+                className="flex-1"
               >
                 Keep it
               </Button>
               <Button
+                variant="destructive"
                 size="sm"
                 onClick={async () => {
                   setLoading(true);
@@ -149,7 +150,7 @@ export default function ItemCard({ item, claims, currentUserId, isOwner, wishlis
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+            className="inline-flex items-center gap-1 text-xs text-primary-text hover:underline"
           >
             🔗 View product ↗
           </a>

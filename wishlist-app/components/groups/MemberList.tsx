@@ -11,7 +11,7 @@ export default function MemberList({ members, className }: MemberListProps) {
   return (
     <div className={cn("flex flex-wrap gap-2", className)}>
       {members.map((m) => {
-        const u = m.users as unknown as Pick<User, "id" | "name" | "profile_image">;
+        const u = m.users;
         return (
           <div key={u.id} className="flex items-center gap-2 bg-card border border-border rounded-full px-3 py-1.5">
             {u.profile_image && (
