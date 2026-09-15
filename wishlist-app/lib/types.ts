@@ -271,6 +271,7 @@ export interface Database {
     Functions: {
       is_group_member: { Args: { p_group_id: string }; Returns: boolean };
       item_has_claims: { Args: { p_item_id: string }; Returns: boolean };
+      delete_group: { Args: { p_group_id: string }; Returns: void };
     };
   };
 }

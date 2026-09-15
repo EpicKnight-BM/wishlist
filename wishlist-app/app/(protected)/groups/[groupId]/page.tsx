@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import type { User } from "@/lib/types";
 import InviteByEmailButton from "./InviteByEmailButton";
+import DeleteGroupButton from "./DeleteGroupButton";
 import MemberList from "@/components/groups/MemberList";
 
 interface Props {
@@ -20,7 +21,7 @@ export default async function GroupPage({ params }: Props) {
   // Verify membership and fetch group
   const { data: membership } = await supabase
     .from("group_members")
-    .select("role, groups(id, name, description, invite_code)")
+    .select("role, groups(id, name, description, invite_code, created_by)")
     .eq("group_id", groupId)
     .eq("user_id", user.id)
     .single();
@@ -32,6 +33,7 @@ export default async function GroupPage({ params }: Props) {
     name: string;
     description: string | null;
     invite_code: string;
+    created_by: string;
   };
 
   // Fetch all members
@@ -74,8 +76,21 @@ export default async function GroupPage({ params }: Props) {
               users: Pick<User, "id" | "name" | "profile_image">;
             }[]
           }
+          groupId={groupId}
+          currentUserId={user.id}
+          isAdmin={membership.role === "admin"}
         />
       </section>
+
+      {/* Danger zone — creator only */}
+      {group.created_by === user.id && (
+        <section>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+            Danger zone
+          </h2>
+          <DeleteGroupButton groupId={groupId} groupName={group.name} />
+        </section>
+      )}
     </div>
   );
 }
