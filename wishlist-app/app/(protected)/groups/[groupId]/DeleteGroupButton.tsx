@@ -54,8 +54,9 @@ export default function DeleteGroupButton({ groupId, groupName }: Props) {
     <Card className="ring-destructive/30">
       <CardContent className="space-y-3">
         <p className="text-sm text-foreground">
-          This permanently deletes <strong>{groupName}</strong> and every wishlist, item, and
-          claim shared through it — for every member, not just you. This can&apos;t be undone.
+          This permanently deletes <strong>{groupName}</strong>{" "}
+          and every wishlist, item, and claim shared through it — for every member, not
+          just you. This can&apos;t be undone.
         </p>
         <div>
           <Label htmlFor="delete-confirm" className="mb-1">
