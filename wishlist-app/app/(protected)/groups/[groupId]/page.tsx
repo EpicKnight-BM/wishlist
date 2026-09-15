@@ -74,6 +74,9 @@ export default async function GroupPage({ params }: Props) {
               users: Pick<User, "id" | "name" | "profile_image">;
             }[]
           }
+          groupId={groupId}
+          currentUserId={user.id}
+          isAdmin={membership.role === "admin"}
         />
       </section>
     </div>
