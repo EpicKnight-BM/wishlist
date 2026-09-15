@@ -59,7 +59,7 @@ export default function DeleteGroupButton({ groupId, groupName }: Props) {
         </p>
         <div>
           <Label htmlFor="delete-confirm" className="mb-1">
-            Type <strong>{groupName}</strong> to confirm
+            Type <strong className="normal-case">{groupName}</strong> to confirm
           </Label>
           <Input
             id="delete-confirm"
