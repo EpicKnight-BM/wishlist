@@ -9,24 +9,34 @@ export interface Database {
       users: {
         Row: {
           id: string;
-          email: string;
+          email: string | null;
           name: string;
           profile_image: string | null;
+          managed_by_user_id: string | null;
           created_at: string;
           updated_at: string;
         };
         Insert: {
-          id: string;
-          email: string;
+          id?: string;
+          email?: string | null;
           name: string;
           profile_image?: string | null;
+          managed_by_user_id?: string | null;
         };
         Update: {
           name?: string;
           profile_image?: string | null;
           updated_at?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "users_managed_by_user_id_fkey";
+            columns: ["managed_by_user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       groups: {
         Row: {
@@ -272,6 +282,8 @@ export interface Database {
       is_group_member: { Args: { p_group_id: string }; Returns: boolean };
       item_has_claims: { Args: { p_item_id: string }; Returns: boolean };
       delete_group: { Args: { p_group_id: string }; Returns: void };
+      can_act_as: { Args: { p_target_user_id: string; p_acting_user_id: string }; Returns: boolean };
+      can_manage_wishlist: { Args: { p_wishlist_id: string; p_acting_user_id: string }; Returns: boolean };
     };
   };
 }

@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import CreateWishlistForm from "@/components/wishlists/CreateWishlistForm";
 
 interface Props {
   params: Promise<{ userId: string }>;
@@ -43,11 +44,13 @@ export default async function PersonPage({ params }: Props) {
 
   const { data: person } = await supabase
     .from("users")
-    .select("id, name, profile_image")
+    .select("id, name, profile_image, managed_by_user_id")
     .eq("id", userId)
     .single();
 
   if (!person) notFound();
+
+  const managedByMe = person.managed_by_user_id === user.id;
 
   // RLS scopes this to wishlists shared with a group I'm in
   const { data: wishlists } = await supabase
@@ -78,6 +81,7 @@ export default async function PersonPage({ params }: Props) {
               {person.name}
             </h1>
             <div className="flex flex-wrap items-center gap-1.5 mt-1">
+              {managedByMe && <Badge variant="secondary">Managed by you</Badge>}
               <span className="text-xs text-muted-foreground">You&apos;re both in</span>
               {sharedGroups.map((g) => (
                 <Badge key={g.id} variant="outline">{g.name}</Badge>
@@ -126,6 +130,12 @@ export default async function PersonPage({ params }: Props) {
                 </Link>
               );
             })}
+          </div>
+        )}
+
+        {managedByMe && (
+          <div className="max-w-sm mt-4">
+            <CreateWishlistForm userId={userId} />
           </div>
         )}
       </section>

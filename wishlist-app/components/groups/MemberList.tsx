@@ -13,7 +13,10 @@ const LAST_ADMIN_MESSAGE =
   "They're the only admin left — promote someone else first, or delete the group instead.";
 
 interface MemberListProps {
-  members: { role: "admin" | "member"; users: Pick<User, "id" | "name" | "profile_image"> }[];
+  members: {
+    role: "admin" | "member";
+    users: Pick<User, "id" | "name" | "profile_image" | "managed_by_user_id">;
+  }[];
   /** Pass groupId + currentUserId to enable leave/remove/role controls. Omit for a read-only listing. */
   groupId?: string;
   currentUserId?: string;
@@ -99,6 +102,8 @@ export default function MemberList({
         {members.map((m) => {
           const u = m.users;
           const isSelf = u.id === currentUserId;
+          const managedByMe = u.managed_by_user_id === currentUserId;
+          const isManaged = Boolean(u.managed_by_user_id);
           const pending = pendingId === u.id;
           const busy = busyId === u.id;
 
@@ -112,8 +117,9 @@ export default function MemberList({
               )}
               <span className="text-sm text-foreground">{u.name}</span>
               {m.role === "admin" && <Badge variant="secondary">admin</Badge>}
+              {isManaged && <Badge variant="outline">managed</Badge>}
 
-              {canManage && isAdmin && !isSelf && !pending && (
+              {canManage && isAdmin && !isSelf && !isManaged && !pending && (
                 <button
                   type="button"
                   disabled={busy}
@@ -156,7 +162,7 @@ export default function MemberList({
                     Leave
                   </button>
                 ) : (
-                  isAdmin && (
+                  (isAdmin || managedByMe) && (
                     <Button
                       variant="ghost"
                       size="icon-xs"

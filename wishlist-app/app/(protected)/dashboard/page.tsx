@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 interface Person {
-  user: Pick<User, "id" | "name" | "profile_image">;
+  user: Pick<User, "id" | "name" | "profile_image" | "managed_by_user_id">;
   sharedGroups: { id: string; name: string }[];
 }
 
@@ -30,7 +30,7 @@ export default async function DashboardPage() {
   const { data: rows } = myGroupIds.length
     ? await supabase
         .from("group_members")
-        .select("user_id, group_id, users(id, name, profile_image), groups(id, name)")
+        .select("user_id, group_id, users(id, name, profile_image, managed_by_user_id), groups(id, name)")
         .in("group_id", myGroupIds)
         .neq("user_id", user.id)
     : { data: [] };
@@ -38,7 +38,7 @@ export default async function DashboardPage() {
   // Dedupe fellow members across groups
   const byUser = new Map<string, Person>();
   for (const row of rows ?? []) {
-    const u = row.users as unknown as Pick<User, "id" | "name" | "profile_image">;
+    const u = row.users as unknown as Pick<User, "id" | "name" | "profile_image" | "managed_by_user_id">;
     const g = row.groups as unknown as { id: string; name: string };
     if (!u) continue;
     const entry = byUser.get(row.user_id) ?? { user: u, sharedGroups: [] };
@@ -83,6 +83,9 @@ export default async function DashboardPage() {
                       />
                     )}
                     <h2 className="font-semibold text-foreground text-lg">{p.user.name}</h2>
+                    {p.user.managed_by_user_id === user.id && (
+                      <Badge variant="secondary">managed by you</Badge>
+                    )}
                   </div>
                   <div className="flex flex-wrap gap-1.5 mt-3">
                     {p.sharedGroups.map((g) => (

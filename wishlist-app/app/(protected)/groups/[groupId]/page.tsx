@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import type { User } from "@/lib/types";
 import InviteByEmailButton from "./InviteByEmailButton";
+import AddManagedProfileButton from "./AddManagedProfileButton";
 import DeleteGroupButton from "./DeleteGroupButton";
 import MemberList from "@/components/groups/MemberList";
 
@@ -39,8 +40,22 @@ export default async function GroupPage({ params }: Props) {
   // Fetch all members
   const { data: members } = await supabase
     .from("group_members")
-    .select("role, users(id, name, profile_image)")
+    .select("role, users(id, name, profile_image, managed_by_user_id)")
     .eq("group_id", groupId);
+
+  const memberIds = new Set(
+    (members ?? []).map((m) => (m.users as unknown as { id: string }).id)
+  );
+
+  // Profiles this user already manages elsewhere, so "Add a profile" can
+  // reuse one instead of always minting a new managed profile — otherwise
+  // the same child would end up as a separate entity in every group.
+  const { data: managedProfiles } = await supabase
+    .from("users")
+    .select("id, name")
+    .eq("managed_by_user_id", user.id);
+
+  const availableManagedProfiles = (managedProfiles ?? []).filter((p) => !memberIds.has(p.id));
 
   return (
     <div className="space-y-8">
@@ -67,13 +82,19 @@ export default async function GroupPage({ params }: Props) {
           <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Members ({members?.length ?? 0})
           </h2>
-          <InviteByEmailButton groupId={groupId} />
+          <div className="flex gap-2">
+            <InviteByEmailButton groupId={groupId} />
+            <AddManagedProfileButton
+              groupId={groupId}
+              existingManagedProfiles={availableManagedProfiles}
+            />
+          </div>
         </div>
         <MemberList
           members={
             (members ?? []) as unknown as {
               role: "admin" | "member";
-              users: Pick<User, "id" | "name" | "profile_image">;
+              users: Pick<User, "id" | "name" | "profile_image" | "managed_by_user_id">;
             }[]
           }
           groupId={groupId}
