@@ -122,7 +122,7 @@ export default async function WishlistsPage() {
       )}
 
       <div className="max-w-sm">
-        <CreateWishlistForm userId={user.id} />
+        <CreateWishlistForm userId={user.id} managedProfiles={managedProfiles ?? []} />
       </div>
     </div>
   );
