@@ -14,11 +14,21 @@ export default async function WishlistsPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  // All wishlists owned by the current user, with their group associations
+  // Profiles this user manages (e.g. a child without their own account) —
+  // their wishlists show up here too, since the manager keeps full access.
+  const { data: managedProfiles } = await supabase
+    .from("users")
+    .select("id, name")
+    .eq("managed_by_user_id", user.id);
+
+  const ownerIds = [user.id, ...(managedProfiles ?? []).map((p) => p.id)];
+  const managedNameById = new Map((managedProfiles ?? []).map((p) => [p.id, p.name]));
+
+  // All wishlists owned by the current user or a profile they manage
   const { data: wishlists } = await supabase
     .from("wishlists")
     .select("*, wishlist_groups(id, group_id, groups(id, name))")
-    .eq("user_id", user.id)
+    .in("user_id", ownerIds)
     .order("created_at", { ascending: false });
 
   // All groups the user belongs to (for the share modal)
@@ -69,6 +79,11 @@ export default async function WishlistsPage() {
                 <CardContent className="space-y-3">
                   <div className="flex items-start justify-between gap-3">
                     <div>
+                      {managedNameById.has(w.user_id) && (
+                        <p className="text-xs text-muted-foreground font-medium">
+                          {managedNameById.get(w.user_id)}&apos;s wishlist
+                        </p>
+                      )}
                       <Link
                         href={`/wishlists/${w.id}`}
                         className="font-semibold text-foreground hover:text-primary-text transition-colors"
@@ -107,7 +122,7 @@ export default async function WishlistsPage() {
       )}
 
       <div className="max-w-sm">
-        <CreateWishlistForm userId={user.id} />
+        <CreateWishlistForm userId={user.id} managedProfiles={managedProfiles ?? []} />
       </div>
     </div>
   );

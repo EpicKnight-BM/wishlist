@@ -25,7 +25,7 @@ export default async function WishlistDetailPage({ params, searchParams }: Props
   // Fetch wishlist + owner (RLS handles visibility)
   const { data: wishlist } = await supabase
     .from("wishlists")
-    .select("*, users(id, name, profile_image), wishlist_groups(id, group_id, groups(id, name))")
+    .select("*, users(id, name, profile_image, managed_by_user_id), wishlist_groups(id, group_id, groups(id, name))")
     .eq("id", wishlistId)
     .single();
 
@@ -43,25 +43,27 @@ export default async function WishlistDetailPage({ params, searchParams }: Props
   const { data: memberRows } = groupIds.length
     ? await supabase
         .from("group_members")
-        .select("group_id, role, users(id, name, profile_image)")
+        .select("group_id, role, users(id, name, profile_image, managed_by_user_id)")
         .in("group_id", groupIds)
     : { data: [] };
 
   const membersByGroup = new Map<
     string,
-    { role: "admin" | "member"; users: Pick<User, "id" | "name" | "profile_image"> }[]
+    { role: "admin" | "member"; users: Pick<User, "id" | "name" | "profile_image" | "managed_by_user_id"> }[]
   >();
   for (const row of memberRows ?? []) {
     const list = membersByGroup.get(row.group_id) ?? [];
     list.push(row as unknown as {
       role: "admin" | "member";
-      users: Pick<User, "id" | "name" | "profile_image">;
+      users: Pick<User, "id" | "name" | "profile_image" | "managed_by_user_id">;
     });
     membersByGroup.set(row.group_id, list);
   }
 
   const isOwner = wishlist.user_id === user.id;
   const owner = wishlist.users as unknown as User;
+  const managedByMe = owner.managed_by_user_id === user.id;
+  const canEdit = isOwner || managedByMe;
 
   // Fetch items — RLS hides secret gift items from owner
   const { data: items } = await supabase
@@ -105,6 +107,7 @@ export default async function WishlistDetailPage({ params, searchParams }: Props
             <h1 className="text-2xl font-heading font-bold text-foreground uppercase tracking-wider">{wishlist.title}</h1>
             <p className="text-sm text-muted-foreground">
               {isOwner ? "Your wishlist" : `${owner.name}'s wishlist`}
+              {managedByMe && " (you manage this)"}
               {wishlist.occasion_date &&
                 ` · ${new Date(wishlist.occasion_date).toLocaleDateString()}`}
             </p>
@@ -168,7 +171,7 @@ export default async function WishlistDetailPage({ params, searchParams }: Props
           </div>
         )}
 
-        {isOwner && (
+        {canEdit && (
           <div className="mt-4">
             <AddItemForm wishlistId={wishlistId} userId={user.id} isSecret={false} />
           </div>
